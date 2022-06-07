@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melhor_negocio/register.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -57,16 +58,33 @@ class _HomeState extends State<Home> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))),
                       )),
-                  ElevatedButton(
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      child: Text(
-                        "Entrar",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                    ),
-                    onPressed: () {},
-                  )
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                      child: ElevatedButton(
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                          child: Text(
+                            "Entrar",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
+                        onPressed: () {},
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                      child: ElevatedButton(
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
+                          child: Text(
+                            "Cadastrar",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
+                        onPressed: () {
+                          MaterialPageRoute(
+                              builder: (context) => const Register());
+                        },
+                      ))
                 ]),
           ))),
     );
