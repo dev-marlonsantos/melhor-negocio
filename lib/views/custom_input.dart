@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 
 class CustomInput extends StatelessWidget {
@@ -10,11 +8,13 @@ class CustomInput extends StatelessWidget {
   final TextInputType type;
 
   const CustomInput(
-      {required this.controller,
+      {Key? key,
+      required this.controller,
       required this.hint,
       this.obscure = false,
       this.autofocus = false,
-      this.type = TextInputType.text});
+      this.type = TextInputType.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

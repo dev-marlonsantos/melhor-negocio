@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                       child: CustomInput(
                         controller: _controllerEmail,
                         hint: "E-mail",
