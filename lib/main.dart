@@ -1,9 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/home.dart';
+import 'package:melhor_negocio/route_generator.dart';
+import 'package:melhor_negocio/views/login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaterialApp(
-      home: const Home(),
+      title: "Melhor Negócio",
+      home: const Login(),
+      initialRoute: "/",
+      onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: createMaterialColor(const Color(0xff9c27b0)),
