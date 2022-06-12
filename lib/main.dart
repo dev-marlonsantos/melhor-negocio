@@ -9,7 +9,7 @@ void main() async {
   runApp(MaterialApp(
       title: "Melhor Negócio",
       home: const Login(),
-      initialRoute: "/",
+      initialRoute: "/login",
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

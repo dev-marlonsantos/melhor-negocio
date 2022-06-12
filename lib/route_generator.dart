@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:melhor_negocio/views/login.dart';
+import 'package:melhor_negocio/views/my_posts.dart';
+import 'package:melhor_negocio/views/new_post.dart';
 import 'package:melhor_negocio/views/posts.dart';
 import 'package:melhor_negocio/views/register.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
     switch (settings.name) {
       case "":
         return MaterialPageRoute(builder: (_) => const Posts());
@@ -13,6 +14,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const Login());
       case "/register":
         return MaterialPageRoute(builder: (_) => const Register());
+      case "/my-posts":
+        return MaterialPageRoute(builder: (_) => const MyPosts());
+      case "/new-post":
+        return MaterialPageRoute(builder: (_) => const NewPost());
       default:
         throw _routeError;
     }
