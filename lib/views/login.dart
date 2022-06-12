@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/views/custom_input.dart';
+import 'package:melhor_negocio/views/widgets/custom_button.dart';
+import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:melhor_negocio/views/models/user.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -39,7 +40,6 @@ class _LoginState extends State<Login> {
     } else {
       setState(() {
         _errorMessage = "Preencha o e-mail e senha!";
-        print(_errorMessage);
       });
     }
   }
@@ -82,33 +82,21 @@ class _LoginState extends State<Login> {
                         type: TextInputType.visiblePassword,
                       )),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                      child: ElevatedButton(
-                        child: const Padding(
-                          padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                          child: Text(
-                            "Entrar",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                    child: CustomButton(
+                        text: "Entrar",
                         onPressed: () {
                           _fieldValidation();
-                        },
-                      )),
+                        }),
+                  ),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                      child: ElevatedButton(
-                        child: const Padding(
-                          padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                          child: Text(
-                            "Cadastrar",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                    child: CustomButton(
+                        text: "Cadastrar",
                         onPressed: () {
                           Navigator.pushNamed(context, "/register");
-                        },
-                      ))
+                        }),
+                  )
                 ]),
           ))),
     );

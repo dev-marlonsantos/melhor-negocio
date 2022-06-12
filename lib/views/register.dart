@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:melhor_negocio/views/custom_input.dart';
+import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:melhor_negocio/views/models/user.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 
