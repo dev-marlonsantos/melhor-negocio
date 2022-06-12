@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
     auth
         .signInWithEmailAndPassword(email: user.email, password: user.password)
         .then((firebaseUser) {
-      Navigator.pushReplacementNamed(context, "");
+      Navigator.pushReplacementNamed(context, "/chats");
     });
   }
 
@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
       _userLogin(user);
     } else {
       setState(() {
-        _errorMessage = "Preencha o e-mail e senha!";
+        _errorMessage = "Campos de E-mail e Senha são obrigatórios!";
         print(_errorMessage);
       });
     }
