@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:melhor_negocio/views/widgets/custom_input.dart';
+import 'package:validadores/validadores.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 
@@ -11,7 +14,13 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
+  final TextEditingController _controllerTitle =
+      TextEditingController(text: "Corsa");
   final List<File> _imageList = [];
+  final List<DropdownMenuItem<String>> _statesDropDownList = [];
+  final List<DropdownMenuItem<String>> _categoriesDropDownList = [];
+  String? _selectedItemStates;
+  String? _selectedItemCategories;
   final _formKey = GlobalKey<FormState>();
 
   Future _imagePicker() async {
@@ -25,6 +34,33 @@ class _NewPostState extends State<NewPost> {
         _imageList.add(pickedImageFile);
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDropDownItems();
+  }
+
+  _loadDropDownItems() {
+    for (var estado in Estados.listaEstados) {
+      _statesDropDownList.add(DropdownMenuItem(
+        child: Text(estado),
+        value: estado,
+      ));
+    }
+    _categoriesDropDownList.add(const DropdownMenuItem(
+      child: Text("Automóvel"),
+      value: "auto",
+    ));
+    _categoriesDropDownList.add(const DropdownMenuItem(
+      child: Text("Informática"),
+      value: "info",
+    ));
+    _categoriesDropDownList.add(const DropdownMenuItem(
+      child: Text("Outros"),
+      value: "outros",
+    ));
   }
 
   @override
@@ -145,12 +181,55 @@ class _NewPostState extends State<NewPost> {
                 },
               ),
               Row(
-                children: const <Widget>[
-                  Text("Estado"),
-                  Text("Categoria"),
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          hint: const Text("Estado"),
+                          value: _selectedItemStates,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          items: _statesDropDownList,
+                          validator: (valor) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo obrigatório")
+                                .valido(_selectedItemStates);
+                          },
+                          onChanged: (valor) {
+                            setState(() {
+                              _selectedItemStates = valor.toString();
+                            });
+                          },
+                        )),
+                  ),
+                  Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          hint: const Text("Categorias"),
+                          value: _selectedItemCategories,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          items: _categoriesDropDownList,
+                          validator: (valor) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo obrigatório")
+                                .valido(_selectedItemCategories);
+                          },
+                          onChanged: (valor) {
+                            setState(() {
+                              _selectedItemCategories = valor.toString();
+                            });
+                          },
+                        )),
+                  )
                 ],
               ),
               const Text("Caixas de Texto"),
+              CustomInput(controller: _controllerTitle, hint: "Título"),
               CustomButton(
                   text: "Cadastrar anúncio",
                   onPressed: () {

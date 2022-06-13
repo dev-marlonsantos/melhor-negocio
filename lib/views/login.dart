@@ -1,4 +1,6 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:melhor_negocio/views/models/user.dart' as u;
@@ -70,7 +72,6 @@ class _LoginState extends State<Login> {
                       child: CustomInput(
                         controller: _controllerEmail,
                         hint: "E-mail",
-                        autofocus: true,
                         type: TextInputType.emailAddress,
                       )),
                   Padding(

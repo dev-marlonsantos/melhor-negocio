@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:brasil_fields/brasil_fields.dart';
-import 'package:intl/intl.dart';
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
