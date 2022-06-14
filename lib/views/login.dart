@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melhor_negocio/views/custom_input.dart';
-import 'package:melhor_negocio/views/models/user.dart' as u;
+import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {

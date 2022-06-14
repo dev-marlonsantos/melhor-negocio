@@ -13,8 +13,10 @@ void main() async {
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: createMaterialColor(const Color(0xff9c27b0)),
-      )));
+          primarySwatch: createMaterialColor(const Color(0xff9c27b0)),
+          iconTheme: IconThemeData(
+            color: createMaterialColor(const Color(0xff9c27b0)),
+          ))));
 }
 
 MaterialColor createMaterialColor(Color color) {

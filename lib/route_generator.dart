@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/views/conversa.dart';
+import 'package:melhor_negocio/views/chat.dart';
 import 'package:melhor_negocio/views/login.dart';
 import 'package:melhor_negocio/views/posts.dart';
 import 'package:melhor_negocio/views/register.dart';
-import 'package:melhor_negocio/views/chats.dart';
+import 'package:melhor_negocio/views/chat_list.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -16,9 +16,9 @@ class RouteGenerator {
       case "/register":
         return MaterialPageRoute(builder: (_) => const Register());
       case "/chats":
-        return MaterialPageRoute(builder: (_) => const Chats());
-      case "/conversa":
-      return MaterialPageRoute(builder: (_) => const Conversa());
+        return MaterialPageRoute(builder: (_) => const ChatList());
+      case "/chat":
+        return MaterialPageRoute(builder: (_) => const Chat());
       default:
         throw _routeError;
     }
