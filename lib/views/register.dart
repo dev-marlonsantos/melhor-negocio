@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:melhor_negocio/views/custom_input.dart';
+import 'package:validadores/validadores.dart';
+import 'package:melhor_negocio/views/widgets/custom_button.dart';
+import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as db;
-
-File _imagePicked = File("images/logo.png");
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -28,16 +28,12 @@ class _RegisterState extends State<Register> {
   }
 
   final TextEditingController _controllerEmail = TextEditingController();
-
   final TextEditingController _controllerPassword =
       TextEditingController();
-
   final TextEditingController _controllerConfirmPassword =
       TextEditingController();
-
   final TextEditingController _controllerName =
       TextEditingController();
-
   final TextEditingController _controllerPhone =
       TextEditingController();
 
@@ -88,81 +84,19 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(""),
-      ),
       body: Container(
           padding: const EdgeInsets.all(16),
           child: Center(
               child: SingleChildScrollView(
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  ElevatedButton(
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      child: Text(
-                        "Imagem de Perfil",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                    ),
                     onPressed: () {
                       _imagePicker();
                     },
                   ),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                      child: Image.file(_imagePicked, width: 160, height: 160)),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                      child: CustomInput(
-                        controller: _controllerName,
-                        hint: "Nome Completo",
-                        autofocus: true,
-                        type: TextInputType.text,
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                      child: CustomInput(
-                        controller: _controllerEmail,
-                        hint: "E-mail",
-                        type: TextInputType.emailAddress,
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                      child: CustomInput(
-                        controller: _controllerPassword,
-                        hint: "Senha",
-                        obscure: true,
-                        type: TextInputType.visiblePassword,
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                      child: CustomInput(
-                        controller: _controllerConfirmPassword,
-                        hint: "Repita a Senha",
-                        obscure: true,
-                        type: TextInputType.visiblePassword,
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                       child: CustomInput(
                         controller: _controllerPhone,
                         hint: "Número de Celular",
                         type: TextInputType.phone,
-                      )),
-                  ElevatedButton(
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                      child: Text(
-                        "Cadastrar",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                    ),
-                    onPressed: () {
-                      _fieldValidation();
-                    },
-                  )
                 ]),
           ))),
     );

@@ -1,5 +1,8 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/views/custom_input.dart';
+import 'package:flutter/services.dart';
+import 'package:melhor_negocio/views/widgets/custom_button.dart';
+import 'package:melhor_negocio/views/widgets/custom_input.dart';;
 import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -38,8 +41,7 @@ class _LoginState extends State<Login> {
       _userLogin(user);
     } else {
       setState(() {
-        _errorMessage = "Campos de E-mail e Senha s√£o obrigat√≥rios!";
-        print(_errorMessage);
+        _errorMessage = "Campos de E-mail e Senha s„o obrigatÛrios!";
       });
     }
   }
@@ -70,7 +72,6 @@ class _LoginState extends State<Login> {
                       child: CustomInput(
                         controller: _controllerEmail,
                         hint: "E-mail",
-                        autofocus: true,
                         type: TextInputType.emailAddress,
                       )),
                   Padding(
@@ -82,33 +83,21 @@ class _LoginState extends State<Login> {
                         type: TextInputType.visiblePassword,
                       )),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                      child: ElevatedButton(
-                        child: const Padding(
-                          padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                          child: Text(
-                            "Entrar",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                    child: CustomButton(
+                        text: "Entrar",
                         onPressed: () {
                           _fieldValidation();
-                        },
-                      )),
+                        }),
+                  ),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                      child: ElevatedButton(
-                        child: const Padding(
-                          padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                          child: Text(
-                            "Cadastrar",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                    child: CustomButton(
+                        text: "Cadastrar",
                         onPressed: () {
                           Navigator.pushNamed(context, "/register");
-                        },
-                      ))
+                        }),
+                  )
                 ]),
           ))),
     );
