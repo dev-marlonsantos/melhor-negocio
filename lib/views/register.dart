@@ -4,8 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:validadores/validadores.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
-import 'package:melhor_negocio/views/models/user.dart' as u;
+import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as db;
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   File? _imagePicked;
+
   Future _imagePicker() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(
@@ -29,16 +31,12 @@ class _RegisterState extends State<Register> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _controllerEmail =
-      TextEditingController(text: "teste@ucl.br");
-  final TextEditingController _controllerPassword =
-      TextEditingController(text: "123456@");
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerConfirmPassword =
-      TextEditingController(text: "123456@");
-  final TextEditingController _controllerName =
-      TextEditingController(text: "User Teste");
-  final TextEditingController _controllerPhone =
-      TextEditingController(text: "40028922");
+      TextEditingController();
+  final TextEditingController _controllerName = TextEditingController();
+  final TextEditingController _controllerPhone = TextEditingController();
 
   String _errorMessage = "";
 
@@ -52,7 +50,14 @@ class _RegisterState extends State<Register> {
           .signInWithEmailAndPassword(
               email: user.email, password: user.password)
           .then((firebaseUser) {
-        Navigator.pushReplacementNamed(context, "");
+        db.FirebaseFirestore.instance.collection('users').doc().set({
+          'name': user.name,
+          'phone': user.phone,
+          'email': user.email,
+          'imageUrl': user.imageUrl
+        });
+
+        Navigator.pushReplacementNamed(context, "/login");
       });
     });
   }

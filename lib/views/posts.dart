@@ -9,11 +9,14 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
-  List<String> itemsMenu = ["Meus anúncios", "Sair"];
+  List<String> itemsMenu = ["Meus anúncios", "Chat", "Sair"];
   _menuItemChoise(String itemChoised) {
     switch (itemChoised) {
       case "Meus anúncios":
         Navigator.pushNamed(context, "/my-posts");
+        break;
+      case "Chat":
+        Navigator.pushNamed(context, "/chat-list");
         break;
       case "Sair":
         _logoutUser();

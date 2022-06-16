@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
-import 'package:melhor_negocio/views/models/user.dart' as u;
+import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
       _userLogin(user);
     } else {
       setState(() {
-        _errorMessage = "Preencha o e-mail e senha!";
+        _errorMessage = "Campos de E-mail e Senha s�o obrigat�rios!";
       });
     }
   }
