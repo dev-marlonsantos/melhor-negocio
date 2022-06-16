@@ -2,7 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
-import 'package:melhor_negocio/views/widgets/custom_input.dart';;
+import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
     auth
         .signInWithEmailAndPassword(email: user.email, password: user.password)
         .then((firebaseUser) {
-      Navigator.pushReplacementNamed(context, "/chats");
+      Navigator.pushReplacementNamed(context, "");
     });
   }
 
@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
       _userLogin(user);
     } else {
       setState(() {
-        _errorMessage = "Campos de E-mail e Senha são obrigatórios!";
+        _errorMessage = "Campos de E-mail e Senha sï¿½o obrigatï¿½rios!";
       });
     }
   }

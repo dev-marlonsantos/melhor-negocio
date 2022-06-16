@@ -20,7 +20,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const MyPosts());
       case "/new-post":
         return MaterialPageRoute(builder: (_) => const NewPost());
-      case "/chats":
+      case "/chat-list":
         return MaterialPageRoute(builder: (_) => const ChatList());
       case "/chat":
         return MaterialPageRoute(builder: (_) => const Chat());
