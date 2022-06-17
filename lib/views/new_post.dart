@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:melhor_negocio/models/postModel.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:validadores/validadores.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +16,7 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
+  final Post _post = Post();
   TextEditingController? _controllerTitle;
   TextEditingController? _controllerPrice;
   TextEditingController? _controllerDescription;
@@ -191,14 +192,17 @@ class _NewPostState extends State<NewPost> {
                     value: _selectedItemStates,
                     style: const TextStyle(color: Colors.black, fontSize: 16),
                     items: _statesDropDownList,
-                    validator: (valor) {
+                    onSaved: (state) {
+                      _post.state = state;
+                    },
+                    validator: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
                           .valido(_selectedItemStates);
                     },
-                    onChanged: (valor) {
+                    onChanged: (value) {
                       setState(() {
-                        _selectedItemStates = valor.toString();
+                        _selectedItemStates = value.toString();
                       });
                     },
                   )),
@@ -209,14 +213,17 @@ class _NewPostState extends State<NewPost> {
                     value: _selectedItemCategories,
                     style: const TextStyle(color: Colors.black, fontSize: 16),
                     items: _categoriesDropDownList,
-                    validator: (valor) {
+                    onSaved: (category) {
+                      _post.category = category;
+                    },
+                    validator: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
                           .valido(_selectedItemCategories);
                     },
-                    onChanged: (valor) {
+                    onChanged: (value) {
                       setState(() {
-                        _selectedItemCategories = valor.toString();
+                        _selectedItemCategories = value.toString();
                       });
                     },
                   )),
@@ -225,11 +232,14 @@ class _NewPostState extends State<NewPost> {
                   child: CustomInput(
                     controller: _controllerTitle,
                     hint: "Título do anúncio",
-                    validator: (valor) {
+                    onSaved: (title) {
+                      _post.title = title;
+                    },
+                    validator: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
                           .maxLength(50, msg: "Máximo de 50 caracteres")
-                          .valido(valor);
+                          .valido(value);
                     },
                   )),
               Padding(
@@ -242,10 +252,13 @@ class _NewPostState extends State<NewPost> {
                       FilteringTextInputFormatter.digitsOnly,
                       CentavosInputFormatter(moeda: true)
                     ],
-                    validator: (valor) {
+                    onSaved: (price) {
+                      _post.price = price;
+                    },
+                    validator: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
-                          .valido(valor);
+                          .valido(value);
                     },
                   )),
               Padding(
@@ -254,6 +267,9 @@ class _NewPostState extends State<NewPost> {
                     hint: "Descrição",
                     controller: _controllerDescription,
                     maxLines: null,
+                    onSaved: (description) {
+                      _post.description = description;
+                    },
                     validator: (String? value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
@@ -263,7 +279,9 @@ class _NewPostState extends State<NewPost> {
               CustomButton(
                   text: "Cadastrar anúncio",
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                    }
                   })
             ],
           ),

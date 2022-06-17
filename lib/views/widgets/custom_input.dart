@@ -10,6 +10,7 @@ class CustomInput extends StatelessWidget {
   final int? maxLines;
   final List<TextInputFormatter>? inputFormatters;
   final FormFieldValidator<String>? validator;
+  final FormFieldSetter<String>? onSaved;
 
   const CustomInput(
       {Key? key,
@@ -20,7 +21,8 @@ class CustomInput extends StatelessWidget {
       this.type,
       this.maxLines = 1,
       this.inputFormatters,
-      this.validator})
+      this.validator,
+      this.onSaved})
       : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class CustomInput extends StatelessWidget {
       inputFormatters: inputFormatters,
       validator: validator,
       maxLines: maxLines,
+      onSaved: onSaved,
       style: const TextStyle(fontSize: 20),
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
