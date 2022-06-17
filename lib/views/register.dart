@@ -137,6 +137,11 @@ class _RegisterState extends State<Register> {
                       controller: _controllerName,
                       hint: "Nome Completo",
                       type: TextInputType.text,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -144,6 +149,11 @@ class _RegisterState extends State<Register> {
                       controller: _controllerEmail,
                       hint: "E-mail",
                       type: TextInputType.emailAddress,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -152,6 +162,11 @@ class _RegisterState extends State<Register> {
                       hint: "Senha",
                       obscure: true,
                       type: TextInputType.visiblePassword,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -160,19 +175,24 @@ class _RegisterState extends State<Register> {
                       hint: "Repita a Senha",
                       obscure: true,
                       type: TextInputType.visiblePassword,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                     child: CustomInput(
-                        controller: _controllerPhone,
-                        hint: "Número de Celular",
-                        type: TextInputType.phone,
-                        validator: (valor) {
-                          return Validador()
-                              .add(Validar.OBRIGATORIO,
-                                  msg: "Campo obrigatório")
-                              .valido(valor);
-                        })),
+                      controller: _controllerPhone,
+                      hint: "Número de Celular",
+                      type: TextInputType.phone,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
+                    )),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: CustomButton(

@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
       _userLogin(user);
     } else {
       setState(() {
-        _errorMessage = "Campos de E-mail e Senha s�o obrigat�rios!";
+        _errorMessage = "Campos de E-mail e Senha são obrigatórios!";
       });
     }
   }
