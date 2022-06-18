@@ -27,7 +27,7 @@ class _RegisterState extends State<Register> {
       source: ImageSource.camera,
     );
     if (pickedImage != null) {
-      final pickedImageFile = File(pickedImage!.path);
+      final pickedImageFile = File(pickedImage.path);
 
       setState(() {
         _imagePicked = pickedImageFile;

@@ -55,51 +55,70 @@ class _LoginState extends State<Login> {
       body: Container(
           padding: const EdgeInsets.all(16),
           child: Center(
-              child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 42),
-                    child: Image.asset(
-                      "images/logo.png",
-                      width: 200,
-                      height: 150,
+            child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 50),
+                      child: Image.asset(
+                        "images/logo.png",
+                        width: 200,
+                        height: 150,
+                      ),
                     ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                      child: CustomInput(
-                        controller: _controllerEmail,
-                        hint: "E-mail",
-                        type: TextInputType.emailAddress,
-                      )),
-                  Padding(
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                        child: CustomInput(
+                          controller: _controllerEmail,
+                          hint: "E-mail",
+                          type: TextInputType.emailAddress,
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                        child: CustomInput(
+                          controller: _controllerPassword,
+                          hint: "Senha",
+                          obscure: true,
+                          type: TextInputType.visiblePassword,
+                        )),
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                      child: CustomInput(
-                        controller: _controllerPassword,
-                        hint: "Senha",
-                        obscure: true,
-                        type: TextInputType.visiblePassword,
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                    child: CustomButton(
-                        text: "Entrar",
-                        onPressed: () {
-                          _fieldValidation();
-                        }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                    child: CustomButton(
-                        text: "Cadastrar",
-                        onPressed: () {
+                      child: CustomButton(
+                          text: "Entrar",
+                          onPressed: () {
+                            _fieldValidation();
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                      child: CustomButton(
+                          text: "Cadastrar",
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/register");
+                          }),
+                    ),
+                    IconButton(
+                      icon: Image.asset(
+                        "images/googleIcon.png",
+                      ),
+                      iconSize: 40,
+                      tooltip: 'Logar com o Google',
+                      onPressed: () {
+                        setState(() {
                           Navigator.pushNamed(context, "/register");
-                        }),
-                  )
-                ]),
-          ))),
+                        });
+                      },
+                    ),
+                    const Text('Logar com o Google',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 15,
+                        )),
+                  ]),
+            ),
+          )),
     );
   }
 }
