@@ -23,7 +23,7 @@ class RouteGenerator {
       case "/chat-list":
         return MaterialPageRoute(builder: (_) => const ChatList());
       case "/chat":
-        return MaterialPageRoute(builder: (_) => const Chat());
+        return MaterialPageRoute(builder: (_) => Chat());
       default:
         throw _routeError;
     }

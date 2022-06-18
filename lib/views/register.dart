@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:validadores/validadores.dart';
@@ -7,6 +8,7 @@ import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as db;
+import 'package:path/path.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -17,16 +19,20 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   File? _imagePicked;
+  String urlImgProfile = "";
 
   Future _imagePicker() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(
-      source: ImageSource.gallery,
+      source: ImageSource.camera,
     );
-    final pickedImageFile = File(pickedImage!.path);
-    setState(() {
-      _imagePicked = pickedImageFile;
-    });
+    if (pickedImage != null) {
+      final pickedImageFile = File(pickedImage!.path);
+
+      setState(() {
+        _imagePicked = pickedImageFile;
+      });
+    }
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -40,7 +46,7 @@ class _RegisterState extends State<Register> {
 
   String _errorMessage = "";
 
-  _userRegister(u.User user) {
+  _userRegister(u.User user) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     auth
         .createUserWithEmailAndPassword(
@@ -49,7 +55,18 @@ class _RegisterState extends State<Register> {
       auth
           .signInWithEmailAndPassword(
               email: user.email, password: user.password)
-          .then((firebaseUser) {
+          .then((firebaseUser) async {
+        if (_imagePicked != null) {
+          String fileName = basename(_imagePicked!.path);
+          Reference firebaseStorageRef = FirebaseStorage.instance
+              .ref()
+              .child(DateTime.now().millisecondsSinceEpoch.toString());
+          TaskSnapshot uploadTask =
+              await firebaseStorageRef.putFile(_imagePicked!);
+          this.urlImgProfile = await uploadTask.ref.getDownloadURL();
+          user.imageUrl = urlImgProfile;
+        }
+
         db.FirebaseFirestore.instance.collection('users').doc().set({
           'name': user.name,
           'phone': user.phone,
@@ -57,12 +74,12 @@ class _RegisterState extends State<Register> {
           'imageUrl': user.imageUrl
         });
 
-        Navigator.pushReplacementNamed(context, "/login");
+        Navigator.pushReplacementNamed(this.context, "/login");
       });
     });
   }
 
-  _fieldValidation() {
+  _fieldValidation() async {
     String email = _controllerEmail.text;
     String password = _controllerPassword.text;
     String name = _controllerName.text;
@@ -74,7 +91,8 @@ class _RegisterState extends State<Register> {
       user.password = password;
       user.name = name;
       user.phone = phone;
-      _userRegister(user);
+
+      await _userRegister(user);
     } else {
       setState(() {
         _errorMessage = "Preencha o e-mail e senha!";
@@ -137,6 +155,11 @@ class _RegisterState extends State<Register> {
                       controller: _controllerName,
                       hint: "Nome Completo",
                       type: TextInputType.text,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -144,6 +167,11 @@ class _RegisterState extends State<Register> {
                       controller: _controllerEmail,
                       hint: "E-mail",
                       type: TextInputType.emailAddress,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -152,6 +180,11 @@ class _RegisterState extends State<Register> {
                       hint: "Senha",
                       obscure: true,
                       type: TextInputType.visiblePassword,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -160,19 +193,24 @@ class _RegisterState extends State<Register> {
                       hint: "Repita a Senha",
                       obscure: true,
                       type: TextInputType.visiblePassword,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                     child: CustomInput(
-                        controller: _controllerPhone,
-                        hint: "Número de Celular",
-                        type: TextInputType.phone,
-                        validator: (valor) {
-                          return Validador()
-                              .add(Validar.OBRIGATORIO,
-                                  msg: "Campo obrigatório")
-                              .valido(valor);
-                        })),
+                      controller: _controllerPhone,
+                      hint: "Número de Celular",
+                      type: TextInputType.phone,
+                      validator: (value) {
+                        return Validador()
+                            .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                            .valido(value);
+                      },
+                    )),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                   child: CustomButton(

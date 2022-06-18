@@ -9,7 +9,7 @@ class CustomInput extends StatelessWidget {
   final TextInputType? type;
   final int? maxLines;
   final List<TextInputFormatter>? inputFormatters;
-  final Function(String)? validator;
+  final FormFieldValidator<String>? validator;
 
   const CustomInput(
       {Key? key,
@@ -31,7 +31,7 @@ class CustomInput extends StatelessWidget {
       autofocus: autofocus,
       keyboardType: type,
       inputFormatters: inputFormatters,
-      validator: (String? value) => value = value as String,
+      validator: validator,
       maxLines: maxLines,
       style: const TextStyle(fontSize: 20),
       decoration: InputDecoration(
