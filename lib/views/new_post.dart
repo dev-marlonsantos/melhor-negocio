@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:melhor_negocio/models/postModel.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:validadores/validadores.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,8 +16,11 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
-  final TextEditingController _controllerTitle =
-      TextEditingController(text: "Corsa");
+  final Post _post = Post();
+  TextEditingController? _controllerTitle;
+  TextEditingController? _controllerPrice;
+  TextEditingController? _controllerDescription;
+
   final List<File> _imageList = [];
   final List<DropdownMenuItem<String>> _statesDropDownList = [];
   final List<DropdownMenuItem<String>> _categoriesDropDownList = [];
@@ -71,7 +76,7 @@ class _NewPostState extends State<NewPost> {
       ),
       body: SingleChildScrollView(
           child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(8),
         child: Form(
           key: _formKey,
           child: Column(
@@ -89,8 +94,8 @@ class _NewPostState extends State<NewPost> {
                               itemBuilder: (context, indice) {
                                 if (indice == _imageList.length) {
                                   return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 0, 16),
                                       child: GestureDetector(
                                         onTap: () {
                                           _imagePicker();
@@ -118,8 +123,8 @@ class _NewPostState extends State<NewPost> {
 
                                 if (_imageList.isNotEmpty) {
                                   return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 0, 16),
                                       child: GestureDetector(
                                           onTap: () {
                                             showDialog(
@@ -180,60 +185,103 @@ class _NewPostState extends State<NewPost> {
                   return null;
                 },
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: DropdownButtonFormField(
-                          hint: const Text("Estado"),
-                          value: _selectedItemStates,
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          items: _statesDropDownList,
-                          validator: (valor) {
-                            return Validador()
-                                .add(Validar.OBRIGATORIO,
-                                    msg: "Campo obrigatório")
-                                .valido(_selectedItemStates);
-                          },
-                          onChanged: (valor) {
-                            setState(() {
-                              _selectedItemStates = valor.toString();
-                            });
-                          },
-                        )),
-                  ),
-                  Expanded(
-                    child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: DropdownButtonFormField(
-                          hint: const Text("Categorias"),
-                          value: _selectedItemCategories,
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          items: _categoriesDropDownList,
-                          validator: (valor) {
-                            return Validador()
-                                .add(Validar.OBRIGATORIO,
-                                    msg: "Campo obrigatório")
-                                .valido(_selectedItemCategories);
-                          },
-                          onChanged: (valor) {
-                            setState(() {
-                              _selectedItemCategories = valor.toString();
-                            });
-                          },
-                        )),
-                  )
-                ],
-              ),
-              const Text("Caixas de Texto"),
-              CustomInput(controller: _controllerTitle, hint: "Título"),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  child: DropdownButtonFormField(
+                    hint: const Text("Estado"),
+                    value: _selectedItemStates,
+                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                    items: _statesDropDownList,
+                    onSaved: (state) {
+                      _post.state = state;
+                    },
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(_selectedItemStates);
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedItemStates = value.toString();
+                      });
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  child: DropdownButtonFormField(
+                    hint: const Text("Categoria"),
+                    value: _selectedItemCategories,
+                    style: const TextStyle(color: Colors.black, fontSize: 16),
+                    items: _categoriesDropDownList,
+                    onSaved: (category) {
+                      _post.category = category;
+                    },
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(_selectedItemCategories);
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedItemCategories = value.toString();
+                      });
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 15, top: 15),
+                  child: CustomInput(
+                    controller: _controllerTitle,
+                    hint: "Título do anúncio",
+                    onSaved: (title) {
+                      _post.title = title;
+                    },
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .maxLength(50, msg: "Máximo de 50 caracteres")
+                          .valido(value);
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: CustomInput(
+                    controller: _controllerPrice,
+                    hint: "Preço",
+                    type: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CentavosInputFormatter(moeda: true)
+                    ],
+                    onSaved: (price) {
+                      _post.price = price;
+                    },
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(value);
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: CustomInput(
+                    hint: "Descrição",
+                    controller: _controllerDescription,
+                    maxLines: null,
+                    onSaved: (description) {
+                      _post.description = description;
+                    },
+                    validator: (String? value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
+                          .valido(value);
+                    },
+                  )),
               CustomButton(
                   text: "Cadastrar anúncio",
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                    }
                   })
             ],
           ),
