@@ -7,7 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:melhor_negocio/models/postModel.dart';
-import 'package:melhor_negocio/views/my_posts.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:validadores/validadores.dart';
 import 'package:image_picker/image_picker.dart';
@@ -101,7 +100,7 @@ class _NewPostState extends State<NewPost> {
   void initState() {
     super.initState();
     _loadDropDownItems();
-    _post = Post();
+    _post = Post.generateId();
   }
 
   _loadDropDownItems() {

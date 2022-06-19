@@ -9,7 +9,20 @@ class Post {
   String _description = "";
   List<String>? _images;
 
-  Post() {
+  Post();
+
+  Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+    id = documentSnapshot.id;
+    state = documentSnapshot["state"];
+    state = documentSnapshot["state"];
+    category = documentSnapshot["category"];
+    title = documentSnapshot["title"];
+    price = documentSnapshot["price"];
+    description = documentSnapshot["description"];
+    images = List<String>.from(documentSnapshot["images"]);
+  }
+
+  Post.generateId() {
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference posts = db.collection("my_posts");
     id = posts.doc().id;

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:melhor_negocio/models/postModel.dart';
 
+// ignore: must_be_immutable
 class PostItem extends StatelessWidget {
-  const PostItem({Key? key}) : super(key: key);
+  Post? post;
+  VoidCallback? onTapItem;
+  VoidCallback? onPressedRemove;
+
+  PostItem(
+      {Key? key, @required this.post, this.onTapItem, this.onPressedRemove})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTapItem,
       child: Card(
           child: Padding(
         padding: const EdgeInsets.all(12),
@@ -14,8 +22,9 @@ class PostItem extends StatelessWidget {
           SizedBox(
             width: 120,
             height: 120,
-            child: Container(
-              color: Colors.orange,
+            child: Image.network(
+              post!.images[0],
+              fit: BoxFit.cover,
             ),
           ),
           Expanded(
@@ -24,23 +33,25 @@ class PostItem extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
-                    Text("Vendo Corsa 98",
-                        style: TextStyle(
+                  children: <Widget>[
+                    Text(post!.title,
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text("R\$ 4.999,80 ")
+                    Text("R\$ ${post!.price}"),
                   ]),
             ),
           ),
-          Expanded(
-              flex: 1,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                ),
-                onPressed: () {},
-                child: const Icon(Icons.delete, color: Colors.white),
-              ))
+          if (onPressedRemove != null)
+            Expanded(
+                flex: 1,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.red),
+                  ),
+                  onPressed: onPressedRemove,
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ))
         ]),
       )),
     );
