@@ -109,7 +109,8 @@ class _MyPostsState extends State<MyPosts> {
                                   actions: <Widget>[
                                     ElevatedButton(
                                       child: const Text("Cancelar",
-                                          style: TextStyle(color: Colors.grey)),
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
