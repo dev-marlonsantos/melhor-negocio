@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Post {
   String _id = "";
   String _state = "";
@@ -5,9 +7,27 @@ class Post {
   String _title = "";
   String _price = "";
   String _description = "";
-  List<String> _images = [];
+  List<String>? _images;
 
-  Post();
+  Post() {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference posts = db.collection("my_posts");
+    id = posts.doc().id;
+    _images = [];
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {
+      "id": _id,
+      "state": _state,
+      "category": _category,
+      "title": _title,
+      "price": _price,
+      "description": _description,
+      "images": _images
+    };
+    return map;
+  }
 
   get id => _id;
 

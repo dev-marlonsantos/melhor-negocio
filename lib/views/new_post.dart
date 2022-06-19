@@ -1,8 +1,13 @@
 import 'dart:io';
+
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/views/my_posts.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:validadores/validadores.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +21,7 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
-  final Post _post = Post();
+  Post _post = Post();
   TextEditingController? _controllerTitle;
   TextEditingController? _controllerPrice;
   TextEditingController? _controllerDescription;
@@ -27,6 +32,7 @@ class _NewPostState extends State<NewPost> {
   String? _selectedItemStates;
   String? _selectedItemCategories;
   final _formKey = GlobalKey<FormState>();
+  BuildContext? _dialogContext;
 
   Future _imagePicker() async {
     final picker = ImagePicker();
@@ -41,10 +47,61 @@ class _NewPostState extends State<NewPost> {
     }
   }
 
+  _savePost() async {
+    _showDialog(_dialogContext!);
+    await _uploadImages();
+
+    User? logedUser = FirebaseAuth.instance.currentUser;
+    String idLogedUser = logedUser!.uid;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db
+        .collection("my_posts")
+        .doc(idLogedUser)
+        .collection("posts")
+        .doc(_post.id)
+        .set(_post.toMap())
+        .then((_) {
+      Navigator.pop(_dialogContext!);
+      Navigator.pop(context);
+    });
+  }
+
+  Future _uploadImages() async {
+    Reference folder = FirebaseStorage.instance
+        .refFromURL("gs://melhor-negocio-6a465.appspot.com");
+
+    for (var image in _imageList) {
+      String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference file =
+          folder.child("my_posts").child(_post.id).child(imageName);
+      TaskSnapshot uploadTask = await file.putFile(image);
+      String url = await uploadTask.ref.getDownloadURL();
+      await _post.images.add(url.toString());
+    }
+  }
+
+  _showDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const <Widget>[
+                  CircularProgressIndicator(),
+                  SizedBox(height: 20),
+                  Text("Salvando anúncio")
+                ]),
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadDropDownItems();
+    _post = Post();
   }
 
   _loadDropDownItems() {
@@ -281,6 +338,8 @@ class _NewPostState extends State<NewPost> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+                      _dialogContext = context;
+                      _savePost();
                     }
                   })
             ],
