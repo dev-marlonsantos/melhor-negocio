@@ -45,7 +45,10 @@ class _MyPostsState extends State<MyPosts> {
         .doc(_idLogedUser)
         .collection("posts")
         .doc(postId)
-        .delete();
+        .delete()
+        .then((_) {
+      db.collection("posts").doc(postId).delete();
+    });
   }
 
   @override

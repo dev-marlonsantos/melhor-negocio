@@ -37,7 +37,7 @@ class PostItem extends StatelessWidget {
                     Text(post!.title,
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text("R\$ ${post!.price}"),
+                    Text("${post!.price}"),
                   ]),
             ),
           ),
