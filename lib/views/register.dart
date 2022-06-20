@@ -8,7 +8,6 @@ import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as db;
-import 'package:path/path.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -57,13 +56,12 @@ class _RegisterState extends State<Register> {
               email: user.email, password: user.password)
           .then((firebaseUser) async {
         if (_imagePicked != null) {
-          String fileName = basename(_imagePicked!.path);
           Reference firebaseStorageRef = FirebaseStorage.instance
               .ref()
               .child(DateTime.now().millisecondsSinceEpoch.toString());
           TaskSnapshot uploadTask =
               await firebaseStorageRef.putFile(_imagePicked!);
-          this.urlImgProfile = await uploadTask.ref.getDownloadURL();
+          urlImgProfile = await uploadTask.ref.getDownloadURL();
           user.imageUrl = urlImgProfile;
         }
 
@@ -74,7 +72,7 @@ class _RegisterState extends State<Register> {
           'imageUrl': user.imageUrl
         });
 
-        Navigator.pushReplacementNamed(this.context, "/login");
+        Navigator.pushReplacementNamed(context, "/login");
       });
     });
   }

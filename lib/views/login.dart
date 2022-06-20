@@ -1,10 +1,9 @@
-import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
+import 'package:melhor_negocio/Authentication.dart' as auth;
 import 'package:melhor_negocio/models/userModel.dart' as u;
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:core';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -21,30 +20,6 @@ class _LoginState extends State<Login> {
       TextEditingController(text: "123456@");
 
   String _errorMessage = "";
-
-  _userLogin(u.User user) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    auth
-        .signInWithEmailAndPassword(email: user.email, password: user.password)
-        .then((firebaseUser) {
-      Navigator.pushReplacementNamed(context, "");
-    });
-  }
-
-  _fieldValidation() {
-    String email = _controllerEmail.text;
-    String password = _controllerPassword.text;
-    if (email.isNotEmpty && password.isNotEmpty) {
-      u.User user = u.User();
-      user.email = email;
-      user.password = password;
-      _userLogin(user);
-    } else {
-      setState(() {
-        _errorMessage = "Campos de E-mail e Senha são obrigatórios!";
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +62,22 @@ class _LoginState extends State<Login> {
                       child: CustomButton(
                           text: "Entrar",
                           onPressed: () {
-                            _fieldValidation();
+                            u.User? userValidate = auth.Authentication.fieldValidation(
+                                _controllerEmail.text,
+                                _controllerPassword.text);
+
+                            if (userValidate != null) {
+                              u.User user = u.User();
+                              user.email = _controllerEmail.text;
+                              user.password = _controllerPassword.text;
+
+                              auth.Authentication.userLogin(context, user);
+                            } else {
+                              setState(() {
+                                _errorMessage =
+                                    "Campos de E-mail e Senha são obrigatórios!";
+                              });
+                            }
                           }),
                     ),
                     Padding(
@@ -106,7 +96,8 @@ class _LoginState extends State<Login> {
                       tooltip: 'Logar com o Google',
                       onPressed: () {
                         setState(() {
-                          Navigator.pushNamed(context, "/register");
+                          auth.Authentication.signInWithGoogle(
+                              context: context);
                         });
                       },
                     ),

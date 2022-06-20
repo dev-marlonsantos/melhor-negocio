@@ -1,12 +1,12 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:melhor_negocio/views/text_composer.dart';
 
 class Chat extends StatefulWidget {
+  const Chat({Key? key}) : super(key: key);
+
   @override
   State<Chat> createState() => _ChatState();
 }
@@ -16,7 +16,6 @@ class _ChatState extends State<Chat> {
     Map<String, dynamic> data = {};
 
     if (imgFile != null) {
-      String fileName = basename(imgFile.path);
       Reference firebaseStorageRef = FirebaseStorage.instance
           .ref()
           .child(DateTime.now().millisecondsSinceEpoch.toString());
@@ -37,7 +36,7 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat'),
+        title: const Text('Chat'),
         elevation: 0,
       ),
       body: Column(
@@ -50,7 +49,7 @@ class _ChatState extends State<Chat> {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
 
