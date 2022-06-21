@@ -15,7 +15,7 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
-  List<String> itemsMenu = ["Meus anúncios", "Chat", "Sair"];
+  List<String> itemsMenu = ["Meus anúncios", "Chat", "Sobre", "Sair"];
   List<DropdownMenuItem<String>>? _statesDropDownList;
   List<DropdownMenuItem<String>>? _categoriesDropDownList;
   String? _stateSelectedItem;
@@ -29,6 +29,9 @@ class _PostsState extends State<Posts> {
         break;
       case "Chat":
         Navigator.pushNamed(context, "/chat-list");
+        break;
+      case "Sobre":
+        Navigator.pushNamed(context, "/about");
         break;
       case "Sair":
         _logoutUser();

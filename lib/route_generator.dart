@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/views/about.dart';
 import 'package:melhor_negocio/views/chat.dart';
 import 'package:melhor_negocio/views/login.dart';
 import 'package:melhor_negocio/views/my_posts.dart';
@@ -30,6 +31,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const ChatList());
       case "/chat":
         return MaterialPageRoute(builder: (_) => Chat());
+      case "/about":
+        return MaterialPageRoute(builder: (_) => const About());
       default:
         throw _routeError;
     }
