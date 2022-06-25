@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/util/Configurations.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:validadores/validadores.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,17 +20,18 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
-  final Post _post = Post();
+  Post _post = Post();
   TextEditingController? _controllerTitle;
   TextEditingController? _controllerPrice;
   TextEditingController? _controllerDescription;
 
   final List<File> _imageList = [];
-  final List<DropdownMenuItem<String>> _statesDropDownList = [];
-  final List<DropdownMenuItem<String>> _categoriesDropDownList = [];
+  List<DropdownMenuItem<String>> _statesDropDownList = [];
+  List<DropdownMenuItem<String>> _categoriesDropDownList = [];
   String? _selectedItemStates;
   String? _selectedItemCategories;
   final _formKey = GlobalKey<FormState>();
+  BuildContext? _dialogContext;
 
   Future _imagePicker() async {
     final picker = ImagePicker();
@@ -41,31 +46,68 @@ class _NewPostState extends State<NewPost> {
     }
   }
 
+  _savePost() async {
+    _showDialog(_dialogContext!);
+    await _uploadImages();
+
+    User? logedUser = FirebaseAuth.instance.currentUser;
+    String idLogedUser = logedUser!.uid;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db
+        .collection("my_posts")
+        .doc(idLogedUser)
+        .collection("posts")
+        .doc(_post.id)
+        .set(_post.toMap())
+        .then((_) {
+      db.collection("posts").doc(_post.id).set(_post.toMap()).then((_) {
+        Navigator.pop(_dialogContext!);
+        Navigator.pop(context);
+      });
+    });
+  }
+
+  Future _uploadImages() async {
+    Reference folder = FirebaseStorage.instance
+        .refFromURL("gs://melhor-negocio-6a465.appspot.com");
+
+    for (var image in _imageList) {
+      String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference file =
+          folder.child("my_posts").child(_post.id).child(imageName);
+      TaskSnapshot uploadTask = await file.putFile(image);
+      String url = await uploadTask.ref.getDownloadURL();
+      await _post.images.add(url.toString());
+    }
+  }
+
+  _showDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const <Widget>[
+                  CircularProgressIndicator(),
+                  SizedBox(height: 20),
+                  Text("Salvando anúncio")
+                ]),
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadDropDownItems();
+    _post = Post.generateId();
   }
 
   _loadDropDownItems() {
-    for (var estado in Estados.listaEstados) {
-      _statesDropDownList.add(DropdownMenuItem(
-        child: Text(estado),
-        value: estado,
-      ));
-    }
-    _categoriesDropDownList.add(const DropdownMenuItem(
-      child: Text("Automóvel"),
-      value: "auto",
-    ));
-    _categoriesDropDownList.add(const DropdownMenuItem(
-      child: Text("Informática"),
-      value: "info",
-    ));
-    _categoriesDropDownList.add(const DropdownMenuItem(
-      child: Text("Outros"),
-      value: "outros",
-    ));
+    _categoriesDropDownList = Configurations.getCategories();
+    _statesDropDownList = Configurations.getStates();
   }
 
   @override
@@ -185,48 +227,53 @@ class _NewPostState extends State<NewPost> {
                   return null;
                 },
               ),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  child: DropdownButtonFormField(
-                    hint: const Text("Estado"),
-                    value: _selectedItemStates,
-                    style: const TextStyle(color: Colors.black, fontSize: 16),
-                    items: _statesDropDownList,
-                    onSaved: (state) {
-                      _post.state = state;
-                    },
-                    validator: (value) {
-                      return Validador()
-                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
-                          .valido(_selectedItemStates);
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedItemStates = value.toString();
-                      });
-                    },
-                  )),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  child: DropdownButtonFormField(
-                    hint: const Text("Categoria"),
-                    value: _selectedItemCategories,
-                    style: const TextStyle(color: Colors.black, fontSize: 16),
-                    items: _categoriesDropDownList,
-                    onSaved: (category) {
-                      _post.category = category;
-                    },
-                    validator: (value) {
-                      return Validador()
-                          .add(Validar.OBRIGATORIO, msg: "Campo obrigatório")
-                          .valido(_selectedItemCategories);
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedItemCategories = value.toString();
-                      });
-                    },
-                  )),
+              Row(children: <Widget>[
+                Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        child: DropdownButtonFormField(
+                            value: _selectedItemStates,
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16),
+                            items: _statesDropDownList,
+                            onSaved: (state) {
+                              _post.state = state;
+                            },
+                            validator: (value) {
+                              return Validador()
+                                  .add(Validar.OBRIGATORIO,
+                                      msg: "Campo obrigatório")
+                                  .valido(_selectedItemStates);
+                            },
+                            onChanged: (String? state) {
+                              setState(() {
+                                _selectedItemStates = state;
+                              });
+                            }))),
+                Expanded(
+                    child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        child: DropdownButtonFormField(
+                          value: _selectedItemCategories,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          items: _categoriesDropDownList,
+                          onSaved: (category) {
+                            _post.category = category;
+                          },
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo obrigatório")
+                                .valido(_selectedItemCategories);
+                          },
+                          onChanged: (String? category) {
+                            setState(() {
+                              _selectedItemCategories = category;
+                            });
+                          },
+                        )))
+              ]),
               Padding(
                   padding: const EdgeInsets.only(bottom: 15, top: 15),
                   child: CustomInput(
@@ -281,6 +328,8 @@ class _NewPostState extends State<NewPost> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+                      _dialogContext = context;
+                      _savePost();
                     }
                   })
             ],
