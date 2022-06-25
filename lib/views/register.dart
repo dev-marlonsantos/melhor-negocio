@@ -23,7 +23,7 @@ class _RegisterState extends State<Register> {
   Future _imagePicker() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(
-      source: ImageSource.camera,
+      source: ImageSource.gallery,
     );
     if (pickedImage != null) {
       final pickedImageFile = File(pickedImage.path);
@@ -65,11 +65,12 @@ class _RegisterState extends State<Register> {
           user.imageUrl = urlImgProfile;
         }
 
-        db.FirebaseFirestore.instance.collection('users').doc().set({
-          'name': user.name,
-          'phone': user.phone,
-          'email': user.email,
-          'imageUrl': user.imageUrl
+        db.FirebaseFirestore.instance.collection('users').doc(user.email).set({
+          'senderName': user.name,
+          'senderPhone': user.phone,
+          'senderEmail': user.email,
+          'senderPhotoUrl': user.imageUrl,
+          'uid': firebaseUser.user!.uid
         });
 
         Navigator.pushReplacementNamed(context, "/login");

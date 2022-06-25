@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:melhor_negocio/Authentication.dart';
 import 'package:melhor_negocio/views/text_composer.dart';
 
 class Chat extends StatefulWidget {
@@ -12,6 +13,8 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  final bool mine = true;
+
   void _sendMessage({String text = "", File? imgFile}) async {
     Map<String, dynamic> data = {};
 
@@ -23,12 +26,15 @@ class _ChatState extends State<Chat> {
       String url = await uploadTask.ref.getDownloadURL();
 
       data['imgUrl'] = url;
+      data['text'] = "";
     }
 
     if (text != "") {
       data['text'] = text;
+      data['imgUrl'] = "";
     }
 
+    data['time'] = Timestamp.now();
     FirebaseFirestore.instance.collection('messages').add(data);
   }
 
@@ -43,8 +49,10 @@ class _ChatState extends State<Chat> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('messages').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('messages')
+                  .orderBy('time')
+                  .snapshots(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -61,8 +69,61 @@ class _ChatState extends State<Chat> {
                       itemCount: documents.length,
                       reverse: true,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(documents[index].get('text')),
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          child: Row(
+                            children: [
+                              !mine
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(right: 16),
+                                      child: CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            Authentication
+                                                .currentUser!.imageUrl),
+                                      ),
+                                    )
+                                  : Container(),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: mine
+                                      ? CrossAxisAlignment.end
+                                      : CrossAxisAlignment.start,
+                                  children: [
+                                    documents[index].get('imgUrl') != ""
+                                        ? Image.network(
+                                            documents[index].get('imgUrl'),
+                                            width: 250,
+                                          )
+                                        : Text(
+                                            documents[index].get('text'),
+                                            textAlign: mine
+                                                ? TextAlign.end
+                                                : TextAlign.start,
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                    Text(
+                                      Authentication.currentUser!.name,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              mine
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(left: 16),
+                                      child: CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            Authentication
+                                                .currentUser!.imageUrl),
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
+                          ),
                         );
                       },
                     );

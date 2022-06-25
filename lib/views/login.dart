@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
-import 'package:melhor_negocio/Authentication.dart' as auth;
+import 'package:melhor_negocio/Authentication.dart';
 import 'package:melhor_negocio/models/userModel.dart' as u;
 import 'dart:core';
 
@@ -62,16 +62,17 @@ class _LoginState extends State<Login> {
                       child: CustomButton(
                           text: "Entrar",
                           onPressed: () {
-                            u.User? userValidate = auth.Authentication.fieldValidation(
-                                _controllerEmail.text,
-                                _controllerPassword.text);
+                            u.User? userValidate =
+                                Authentication.fieldValidation(
+                                    _controllerEmail.text,
+                                    _controllerPassword.text);
 
                             if (userValidate != null) {
                               u.User user = u.User();
                               user.email = _controllerEmail.text;
                               user.password = _controllerPassword.text;
 
-                              auth.Authentication.userLogin(context, user);
+                              Authentication.userLogin(context, user);
                             } else {
                               setState(() {
                                 _errorMessage =
@@ -88,25 +89,6 @@ class _LoginState extends State<Login> {
                             Navigator.pushNamed(context, "/register");
                           }),
                     ),
-                    IconButton(
-                      icon: Image.asset(
-                        "images/googleIcon.png",
-                      ),
-                      iconSize: 40,
-                      tooltip: 'Logar com o Google',
-                      onPressed: () {
-                        setState(() {
-                          auth.Authentication.signInWithGoogle(
-                              context: context);
-                        });
-                      },
-                    ),
-                    const Text('Logar com o Google',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 15,
-                        )),
                   ]),
             ),
           )),

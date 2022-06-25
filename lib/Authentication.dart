@@ -1,16 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:melhor_negocio/models/userModel.dart' as u;
+import 'package:cloud_firestore/cloud_firestore.dart' as db;
 
 class Authentication {
-  static User? currentUser;
+  static u.User? currentUser;
 
   static userLogin(BuildContext context, u.User user) {
     FirebaseAuth auth = FirebaseAuth.instance;
     auth
         .signInWithEmailAndPassword(email: user.email, password: user.password)
-        .then((firebaseUser) {
+        .then((firebaseUser) async {
+      db.DocumentSnapshot doc = await db.FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.email)
+          .get();
+
+      currentUser = u.User();
+      currentUser!.idUser = firebaseUser.user!.uid;
+      currentUser!.name = doc.get('senderName');
+      currentUser!.imageUrl = doc.get('senderPhotoUrl');
+      currentUser!.phone = doc.get('senderPhone');
+      currentUser!.email = doc.get('senderEmail');
+      
       Navigator.pushReplacementNamed(context, "");
     });
   }
@@ -25,44 +37,5 @@ class Authentication {
     }
 
     return user;
-  }
-
-  static Future<User?> signInWithGoogle({required BuildContext context}) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? _user;
-
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
-
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-
-      try {
-        final UserCredential userCredential =
-            await auth.signInWithCredential(credential);
-
-        _user = userCredential.user;
-        currentUser = userCredential.user;
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'account-exists-with-different-credential') {
-          // handle the error here
-        } else if (e.code == 'invalid-credential') {
-          return null;
-        }
-      } catch (e) {
-        // handle the error here
-        return null;
-      }
-    }
-
-    return _user;
   }
 }
