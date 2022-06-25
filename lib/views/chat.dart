@@ -2,11 +2,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/Authentication.dart';
-import 'package:melhor_negocio/views/text_composer.dart';
+import 'package:melhor_negocio/models/post_model.dart';
+import 'package:melhor_negocio/util/authentication.dart';
+import 'package:melhor_negocio/views/widgets/text_composer.dart';
 
+// ignore: must_be_immutable
 class Chat extends StatefulWidget {
-  const Chat({Key? key}) : super(key: key);
+  Post? post;
+
+  Chat(this.post, {Key? key}) : super(key: key);
 
   @override
   State<Chat> createState() => _ChatState();
@@ -14,6 +18,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final bool mine = true;
+  Post? _post;
 
   void _sendMessage({String text = "", File? imgFile}) async {
     Map<String, dynamic> data = {};
@@ -39,10 +44,17 @@ class _ChatState extends State<Chat> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _post = widget.post;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        centerTitle: true,
+        title: Text(_post!.title.toString()),
         elevation: 0,
       ),
       body: Column(

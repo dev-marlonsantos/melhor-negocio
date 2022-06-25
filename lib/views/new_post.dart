@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/models/post_model.dart';
+import 'package:melhor_negocio/util/authentication.dart';
 import 'package:melhor_negocio/util/Configurations.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
 import 'package:validadores/validadores.dart';
@@ -50,12 +51,12 @@ class _NewPostState extends State<NewPost> {
     _showDialog(_dialogContext!);
     await _uploadImages();
 
-    User? logedUser = FirebaseAuth.instance.currentUser;
-    String idLogedUser = logedUser!.uid;
+    _post.uidUser = Authentication.currentUser!.idUser;
+
     FirebaseFirestore db = FirebaseFirestore.instance;
     db
         .collection("my_posts")
-        .doc(idLogedUser)
+        .doc(_post.uidUser)
         .collection("posts")
         .doc(_post.id)
         .set(_post.toMap())

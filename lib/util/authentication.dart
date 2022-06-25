@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/models/userModel.dart' as u;
+import 'package:melhor_negocio/models/user_model.dart' as u;
 import 'package:cloud_firestore/cloud_firestore.dart' as db;
 
 class Authentication {

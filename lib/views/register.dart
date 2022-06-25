@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:validadores/validadores.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
-import 'package:melhor_negocio/models/userModel.dart' as u;
+import 'package:melhor_negocio/models/user_model.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as db;
 

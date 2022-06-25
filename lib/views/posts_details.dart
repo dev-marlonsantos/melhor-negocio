@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/models/post_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 // ignore: must_be_immutable
@@ -36,7 +36,7 @@ class _PostDetailsState extends State<PostDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Anúncio")),
+      appBar: AppBar(centerTitle: true, title: Text(_post!.title.toString())),
       body: Stack(
         children: <Widget>[
           ListView(
@@ -115,7 +115,9 @@ class _PostDetailsState extends State<PostDetails> {
                     color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(30)),
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, "/chat", arguments: _post);
+              },
             ),
           )
         ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:melhor_negocio/views/widgets/custom_button.dart';
 import 'package:melhor_negocio/views/widgets/custom_input.dart';
-import 'package:melhor_negocio/Authentication.dart';
-import 'package:melhor_negocio/models/userModel.dart' as u;
+import 'package:melhor_negocio/util/authentication.dart';
+import 'package:melhor_negocio/models/user_model.dart' as u;
 import 'dart:core';
 
 class Login extends StatefulWidget {

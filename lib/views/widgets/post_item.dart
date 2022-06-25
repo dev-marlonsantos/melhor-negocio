@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/models/post_model.dart';
 
 // ignore: must_be_immutable
 class PostItem extends StatelessWidget {

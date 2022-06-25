@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/models/post_model.dart';
 import 'package:melhor_negocio/views/widgets/post_item.dart';
 
 class MyPosts extends StatefulWidget {

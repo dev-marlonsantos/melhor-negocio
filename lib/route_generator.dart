@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:melhor_negocio/models/postModel.dart';
+import 'package:melhor_negocio/models/post_model.dart';
 import 'package:melhor_negocio/views/about.dart';
 import 'package:melhor_negocio/views/chat.dart';
 import 'package:melhor_negocio/views/login.dart';
@@ -30,7 +30,7 @@ class RouteGenerator {
       case "/chat-list":
         return MaterialPageRoute(builder: (_) => const ChatList());
       case "/chat":
-        return MaterialPageRoute(builder: (_) => Chat());
+        return MaterialPageRoute(builder: (_) => Chat(args as Post));
       case "/about":
         return MaterialPageRoute(builder: (_) => const About());
       default:

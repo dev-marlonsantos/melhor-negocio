@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
   String _id = "";
+  String _uidUser = "";
   String _state = "";
   String _category = "";
   String _title = "";
@@ -13,7 +14,7 @@ class Post {
 
   Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     id = documentSnapshot.id;
-    state = documentSnapshot["state"];
+    uidUser = documentSnapshot["uidUser"];
     state = documentSnapshot["state"];
     category = documentSnapshot["category"];
     title = documentSnapshot["title"];
@@ -45,6 +46,10 @@ class Post {
   get id => _id;
 
   set id(value) => _id = value;
+
+  get uidUser => _uidUser;
+
+  set uidUser(value) => _uidUser = value;
 
   get state => _state;
 
