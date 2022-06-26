@@ -22,7 +22,7 @@ class Authentication {
       currentUser!.imageUrl = doc.get('senderPhotoUrl');
       currentUser!.phone = doc.get('senderPhone');
       currentUser!.email = doc.get('senderEmail');
-      
+
       Navigator.pushReplacementNamed(context, "");
     });
   }

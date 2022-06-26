@@ -116,7 +116,7 @@ class _PostDetailsState extends State<PostDetails> {
                     borderRadius: BorderRadius.circular(30)),
               ),
               onTap: () {
-                Navigator.pushNamed(context, "/chat", arguments: _post);
+                Navigator.pushNamed(context, "/my_chat", arguments: _post);
               },
             ),
           )

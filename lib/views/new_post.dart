@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,10 +57,10 @@ class _NewPostState extends State<NewPost> {
         .collection("my_posts")
         .doc(_post.uidUser)
         .collection("posts")
-        .doc(_post.id)
+        .doc()
         .set(_post.toMap())
         .then((_) {
-      db.collection("posts").doc(_post.id).set(_post.toMap()).then((_) {
+      db.collection("posts").doc().set(_post.toMap()).then((_) {
         Navigator.pop(_dialogContext!);
         Navigator.pop(context);
       });

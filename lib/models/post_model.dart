@@ -33,6 +33,7 @@ class Post {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       "id": _id,
+      "uidUser": _uidUser,
       "state": _state,
       "category": _category,
       "title": _title,

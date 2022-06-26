@@ -68,6 +68,7 @@ class _MyPostsState extends State<MyPosts> {
     ));
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: const Text("Meus anúncios"),
         ),
         floatingActionButton: FloatingActionButton(
