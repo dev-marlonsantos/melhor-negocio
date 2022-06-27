@@ -75,4 +75,13 @@ class Chat {
     this.imgUrl = "";
     this.image = File("");
   }
+
+  Chat.fromDocumentSnapshot(DocumentSnapshot item) {
+    this.idUser = item.get('idUser');
+    this.idPost = item.get('idPost');
+    this.imgUrl = item.get('imgUrl');
+    this.text = item.get('text');
+    this.type = item.get('type');
+    this.dateTime = item.get('dateTime');
+  }
 }

@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:melhor_negocio/models/chat_model.dart';
 import 'package:melhor_negocio/models/post_model.dart';
+import 'package:melhor_negocio/models/talk_model.dart';
 import 'package:melhor_negocio/util/authentication.dart';
 import 'package:melhor_negocio/views/widgets/text_composer.dart';
 
@@ -25,7 +26,7 @@ class _MyChatState extends State<MyChat> {
   }
 
   void _sendMessage(Chat message) async {
-    Chat talk = Chat();
+    Chat chat = Chat();
     try {
       if (message.type == 'image') {
         Reference firebaseStorageRef = FirebaseStorage.instance
@@ -35,30 +36,56 @@ class _MyChatState extends State<MyChat> {
             await firebaseStorageRef.putFile(message.image);
         String url = await uploadTask.ref.getDownloadURL();
 
-        talk.imgUrl = url;
+        chat.imgUrl = url;
       }
 
-      talk.idUser = Authentication.currentUser!.idUser;
-      talk.idPost = _post!.id;
-      talk.dateTime = Timestamp.now();
-      talk.type = message.type;
+      chat.idUser = Authentication.currentUser!.idUser;
+      chat.idPost = _post!.id;
+      chat.dateTime = Timestamp.now();
+      chat.type = message.type;
 
-      if (message.type == 'text') talk.text = message.text;
-
-      await db
-          .collection('messages')
-          .doc(talk.idUser) 
-          .collection(_post!.uidUser) 
-          .add(talk.toMap());
+      if (message.type == 'text') chat.text = message.text;
 
       await db
           .collection('messages')
-          .doc(_post!.uidUser) 
-          .collection(talk.idUser) 
-          .add(talk.toMap());
+          .doc(chat.idUser)
+          .collection(_post!.uidUser)
+          .add(chat.toMap());
+
+      await db
+          .collection('messages')
+          .doc(_post!.uidUser)
+          .collection(chat.idUser)
+          .add(chat.toMap());
+
+      _saveTalk(chat);
     } catch (error) {
       print(error.toString());
     }
+  }
+
+  _saveTalk(Chat chat) {
+    //Save talk Sender
+    Talk tSender = Talk();
+    tSender.idUserSender = chat.idUser;
+    tSender.idUserReceiver = _post!.uidUser;
+    tSender.text = chat.text;
+    tSender.name = widget.post!.title;
+    tSender.imgUrl = widget.post!.images[0];
+    tSender.type = chat.type;
+    tSender.idPost = _post!.id;
+    tSender.salvar();
+
+    //Save talk Receiver
+    Talk tReceiver = Talk();
+    tReceiver.idUserSender = _post!.uidUser;
+    tReceiver.idUserReceiver = chat.idUser;
+    tReceiver.text = chat.text;
+    tReceiver.name = widget.post!.title;
+    tReceiver.imgUrl = widget.post!.images[0];
+    tReceiver.type = chat.type;
+    tReceiver.idPost = _post!.id;
+    tReceiver.salvar();
   }
 
   @override
@@ -88,7 +115,8 @@ class _MyChatState extends State<MyChat> {
                   snapshot.data as QuerySnapshot<Object?>?;
 
               if (snapshot.hasError) {
-                return const Expanded(child: Text("Erro ao carregar os dados!"));
+                return const Expanded(
+                    child: Text("Erro ao carregar os dados!"));
               } else {
                 return Expanded(
                   child: ListView.builder(
